@@ -1,9 +1,14 @@
 
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// We use a getter to ensure we always have the latest API key and don't crash on load if process.env is weird
+const getAI = () => {
+  const apiKey = process.env.API_KEY || "";
+  return new GoogleGenAI({ apiKey });
+};
 
 export const getOIDCHelp = async (query: string, context?: string) => {
+  const ai = getAI();
   const response = await ai.models.generateContent({
     model: 'gemini-3-flash-preview',
     contents: `As an OIDC/OAuth2 expert, help with this query: ${query}${context ? `\n\nContext: ${context}` : ''}`,
