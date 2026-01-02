@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
-import { decodeJWT, formatTime } from '../utils/oidc';
-import { DecodedJWT } from '../types';
-import { CodeBlock } from './CodeBlock';
+import { decodeJWT, formatTime } from '../utils/oidc.ts';
+import { DecodedJWT } from '../types.ts';
+import { CodeBlock } from './CodeBlock.tsx';
 
 export const JWTDebugger: React.FC = () => {
   const [tokenInput, setTokenInput] = useState('');
@@ -10,7 +10,7 @@ export const JWTDebugger: React.FC = () => {
 
   useEffect(() => {
     if (tokenInput.trim()) {
-      const res = decodeJWT(tokenInput);
+      const res = decodeJWT(tokenInput.trim());
       setDecoded(res);
     } else {
       setDecoded(null);
@@ -18,7 +18,7 @@ export const JWTDebugger: React.FC = () => {
   }, [tokenInput]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in duration-500">
       <section className="bg-zinc-900/50 p-6 rounded-xl border border-zinc-800">
         <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
           <span className="w-2 h-6 bg-purple-500 rounded-full"></span>
@@ -28,7 +28,7 @@ export const JWTDebugger: React.FC = () => {
           value={tokenInput}
           onChange={(e) => setTokenInput(e.target.value)}
           placeholder="Paste your ID Token or Access Token here..."
-          className="w-full h-32 bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500/50 text-sm mono text-zinc-300 resize-none"
+          className="w-full h-32 bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500/50 text-sm mono text-zinc-300 resize-none transition-all"
         />
       </section>
 
@@ -39,7 +39,7 @@ export const JWTDebugger: React.FC = () => {
       )}
 
       {decoded && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-in slide-in-from-bottom-4 duration-500">
           <div className="space-y-6">
             <div>
               <h3 className="text-sm font-bold text-zinc-500 uppercase tracking-widest mb-2">Header</h3>
@@ -54,22 +54,22 @@ export const JWTDebugger: React.FC = () => {
           <div className="space-y-6">
             <div>
               <h3 className="text-sm font-bold text-zinc-500 uppercase tracking-widest mb-2">Claim Validation</h3>
-              <div className="bg-zinc-900 border border-zinc-800 rounded-lg divide-y divide-zinc-800">
-                <div className="p-4 flex justify-between items-center">
+              <div className="bg-zinc-900 border border-zinc-800 rounded-lg divide-y divide-zinc-800 overflow-hidden">
+                <div className="p-4 flex justify-between items-center hover:bg-zinc-800/30 transition-colors">
                   <span className="text-zinc-400 text-sm font-medium">Issuer (iss)</span>
                   <span className="text-zinc-200 text-xs mono text-right break-all ml-4">{decoded.payload.iss || 'Missing'}</span>
                 </div>
-                <div className="p-4 flex justify-between items-center">
+                <div className="p-4 flex justify-between items-center hover:bg-zinc-800/30 transition-colors">
                   <span className="text-zinc-400 text-sm font-medium">Subject (sub)</span>
                   <span className="text-zinc-200 text-xs mono text-right break-all ml-4">{decoded.payload.sub || 'Missing'}</span>
                 </div>
-                <div className="p-4 flex justify-between items-center">
+                <div className="p-4 flex justify-between items-center hover:bg-zinc-800/30 transition-colors">
                   <span className="text-zinc-400 text-sm font-medium">Audience (aud)</span>
                   <span className="text-zinc-200 text-xs mono text-right break-all ml-4">
                     {Array.isArray(decoded.payload.aud) ? decoded.payload.aud.join(', ') : decoded.payload.aud || 'Missing'}
                   </span>
                 </div>
-                <div className="p-4 flex justify-between items-center">
+                <div className="p-4 flex justify-between items-center hover:bg-zinc-800/30 transition-colors">
                   <span className="text-zinc-400 text-sm font-medium">Expires at (exp)</span>
                   <div className="text-right">
                     <div className="text-zinc-200 text-xs mono">{formatTime(decoded.payload.exp)}</div>
@@ -80,7 +80,7 @@ export const JWTDebugger: React.FC = () => {
                     )}
                   </div>
                 </div>
-                <div className="p-4 flex justify-between items-center">
+                <div className="p-4 flex justify-between items-center hover:bg-zinc-800/30 transition-colors">
                   <span className="text-zinc-400 text-sm font-medium">Issued at (iat)</span>
                   <span className="text-zinc-200 text-xs mono">{formatTime(decoded.payload.iat)}</span>
                 </div>

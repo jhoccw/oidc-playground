@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { OIDCConfig } from '../types';
-import { CodeBlock } from './CodeBlock';
+import { OIDCConfig } from '../types.ts';
+import { CodeBlock } from './CodeBlock.tsx';
 
 const COMMON_ISSUERS = [
   { name: 'Google', url: 'https://accounts.google.com' },
@@ -17,27 +17,29 @@ export const DiscoveryExplorer: React.FC = () => {
   const [error, setError] = useState('');
 
   const fetchDiscovery = async (issuerUrl: string) => {
+    if (!issuerUrl) return;
     setLoading(true);
     setError('');
     setConfig(null);
     try {
-      const discoveryUrl = issuerUrl.endsWith('/') 
-        ? `${issuerUrl}.well-known/openid-configuration`
-        : `${issuerUrl}/.well-known/openid-configuration`;
+      const sanitized = issuerUrl.trim();
+      const discoveryUrl = sanitized.endsWith('/') 
+        ? `${sanitized}.well-known/openid-configuration`
+        : `${sanitized}/.well-known/openid-configuration`;
       
       const response = await fetch(discoveryUrl);
-      if (!response.ok) throw new Error('Failed to fetch discovery document');
+      if (!response.ok) throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
       const data = await response.json();
       setConfig(data);
     } catch (err: any) {
-      setError(err.message || 'An error occurred');
+      setError(err.message || 'An error occurred during discovery fetch');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in duration-500">
       <section className="bg-zinc-900/50 p-6 rounded-xl border border-zinc-800">
         <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
           <span className="w-2 h-6 bg-blue-500 rounded-full"></span>
@@ -51,6 +53,7 @@ export const DiscoveryExplorer: React.FC = () => {
             type="text"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && fetchDiscovery(url)}
             placeholder="https://accounts.google.com"
             className="flex-1 bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-sm"
           />
@@ -80,13 +83,14 @@ export const DiscoveryExplorer: React.FC = () => {
       </section>
 
       {error && (
-        <div className="p-4 bg-red-900/20 border border-red-500/50 text-red-400 rounded-lg text-sm">
+        <div className="p-4 bg-red-900/20 border border-red-500/50 text-red-400 rounded-lg text-sm flex items-center gap-3">
+          <span className="text-xl">⚠️</span>
           {error}
         </div>
       )}
 
       {config && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-in slide-in-from-bottom-4 duration-500">
           <div className="md:col-span-2 space-y-4">
             <h3 className="text-lg font-semibold text-zinc-200">Raw Configuration</h3>
             <CodeBlock code={JSON.stringify(config, null, 2)} />

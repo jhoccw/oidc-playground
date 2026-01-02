@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
-import { AuthRequestParams } from '../types';
-import { generateRandomString, buildAuthorizeUrl } from '../utils/oidc';
-import { CodeBlock } from './CodeBlock';
+import { AuthRequestParams } from '../types.ts';
+import { generateRandomString, buildAuthorizeUrl } from '../utils/oidc.ts';
+import { CodeBlock } from './CodeBlock.tsx';
 
 export const RequestBuilder: React.FC = () => {
   const [params, setParams] = useState<AuthRequestParams>({
@@ -19,8 +19,12 @@ export const RequestBuilder: React.FC = () => {
 
   useEffect(() => {
     const { issuer, ...rest } = params;
-    const url = buildAuthorizeUrl(issuer, rest);
-    setGeneratedUrl(url);
+    try {
+      const url = buildAuthorizeUrl(issuer, rest);
+      setGeneratedUrl(url);
+    } catch (e) {
+      setGeneratedUrl('Invalid Auth Endpoint');
+    }
   }, [params]);
 
   const updateParam = (key: keyof AuthRequestParams, value: string) => {
@@ -36,7 +40,7 @@ export const RequestBuilder: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in duration-500">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <section className="bg-zinc-900/50 p-6 rounded-xl border border-zinc-800 space-y-4">
           <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
@@ -51,7 +55,7 @@ export const RequestBuilder: React.FC = () => {
                 type="text"
                 value={params.issuer}
                 onChange={(e) => updateParam('issuer', e.target.value)}
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-green-500/50 outline-none"
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-green-500/50 outline-none transition-all"
               />
             </label>
 
@@ -62,7 +66,7 @@ export const RequestBuilder: React.FC = () => {
                 value={params.clientId}
                 onChange={(e) => updateParam('clientId', e.target.value)}
                 placeholder="your-client-id"
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-green-500/50 outline-none"
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-green-500/50 outline-none transition-all"
               />
             </label>
 
@@ -72,7 +76,7 @@ export const RequestBuilder: React.FC = () => {
                 type="text"
                 value={params.redirectUri}
                 onChange={(e) => updateParam('redirectUri', e.target.value)}
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-green-500/50 outline-none"
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-green-500/50 outline-none transition-all"
               />
             </label>
 
@@ -97,7 +101,7 @@ export const RequestBuilder: React.FC = () => {
                   type="text"
                   value={params.scope}
                   onChange={(e) => updateParam('scope', e.target.value)}
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-green-500/50 outline-none"
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-green-500/50 outline-none transition-all"
                 />
               </label>
             </div>
@@ -109,7 +113,7 @@ export const RequestBuilder: React.FC = () => {
                   type="text"
                   value={params.state}
                   onChange={(e) => updateParam('state', e.target.value)}
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-green-500/50 outline-none"
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-green-500/50 outline-none transition-all"
                 />
               </label>
               <label className="block relative">
@@ -118,7 +122,7 @@ export const RequestBuilder: React.FC = () => {
                   type="text"
                   value={params.nonce}
                   onChange={(e) => updateParam('nonce', e.target.value)}
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-green-500/50 outline-none"
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-green-500/50 outline-none transition-all"
                 />
               </label>
             </div>
@@ -136,22 +140,28 @@ export const RequestBuilder: React.FC = () => {
           <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 h-full flex flex-col">
             <h3 className="text-lg font-semibold text-zinc-200 mb-4">Generated URL</h3>
             <div className="flex-1">
-              <div className="p-4 bg-zinc-950 border border-zinc-800 rounded-lg break-all text-xs mono text-green-400 mb-4 h-48 overflow-y-auto leading-relaxed">
+              <div className="p-4 bg-zinc-950 border border-zinc-800 rounded-lg break-all text-xs mono text-green-400 mb-4 h-48 overflow-y-auto leading-relaxed scrollbar-thin scrollbar-thumb-zinc-800">
                 {generatedUrl}
               </div>
               
               <div className="space-y-3">
                 <a
-                  href={generatedUrl}
+                  href={generatedUrl === 'Invalid Auth Endpoint' ? '#' : generatedUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block w-full text-center py-3 bg-green-600 hover:bg-green-500 text-white rounded-lg font-bold transition-all shadow-lg shadow-green-900/20"
+                  className={`block w-full text-center py-3 rounded-lg font-bold transition-all shadow-lg ${
+                    generatedUrl === 'Invalid Auth Endpoint' 
+                      ? 'bg-zinc-800 text-zinc-500 cursor-not-allowed' 
+                      : 'bg-green-600 hover:bg-green-500 text-white shadow-green-900/20'
+                  }`}
+                  onClick={(e) => generatedUrl === 'Invalid Auth Endpoint' && e.preventDefault()}
                 >
                   Initiate Auth Flow
                 </a>
                 <button
                   onClick={() => navigator.clipboard.writeText(generatedUrl)}
-                  className="block w-full py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg text-sm transition-colors"
+                  disabled={generatedUrl === 'Invalid Auth Endpoint'}
+                  className="block w-full py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg text-sm transition-colors disabled:opacity-50"
                 >
                   Copy URL
                 </button>

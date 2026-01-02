@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { getOIDCHelp } from '../services/geminiService';
+import { getOIDCHelp } from '../services/geminiService.ts';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -24,23 +24,24 @@ export const GeminiAssistant: React.FC = () => {
   const handleSend = async () => {
     if (!input.trim() || loading) return;
 
-    const userMsg: Message = { role: 'user', content: input };
+    const query = input.trim();
+    const userMsg: Message = { role: 'user', content: query };
     setMessages(prev => [...prev, userMsg]);
     setInput('');
     setLoading(true);
 
     try {
-      const response = await getOIDCHelp(input);
+      const response = await getOIDCHelp(query);
       setMessages(prev => [...prev, { role: 'assistant', content: response }]);
     } catch (error) {
-      setMessages(prev => [...prev, { role: 'assistant', content: 'Sorry, I encountered an error processing that request.' }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: 'Sorry, I encountered an error processing that request. Please try again.' }]);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-250px)] bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
+    <div className="flex flex-col h-[calc(100vh-250px)] bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden animate-in fade-in zoom-in-95 duration-500">
       <div className="p-4 border-b border-zinc-800 flex items-center justify-between bg-zinc-950/50">
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
@@ -49,12 +50,12 @@ export const GeminiAssistant: React.FC = () => {
         <span className="text-[10px] bg-zinc-800 text-zinc-500 px-2 py-0.5 rounded uppercase font-bold tracking-widest">Powered by Gemini</span>
       </div>
 
-      <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-6">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin scrollbar-thumb-zinc-800">
         {messages.map((m, i) => (
-          <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+          <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'} animate-in slide-in-from-bottom-2 duration-300`}>
+            <div className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm ${
               m.role === 'user' 
-                ? 'bg-blue-600 text-white rounded-br-none shadow-lg shadow-blue-900/10' 
+                ? 'bg-blue-600 text-white rounded-br-none shadow-blue-900/10' 
                 : 'bg-zinc-800 text-zinc-300 rounded-bl-none border border-zinc-700'
             }`}>
               <div className="whitespace-pre-wrap">
@@ -64,8 +65,8 @@ export const GeminiAssistant: React.FC = () => {
           </div>
         ))}
         {loading && (
-          <div className="flex justify-start">
-            <div className="bg-zinc-800 text-zinc-500 rounded-2xl px-4 py-3 border border-zinc-700 animate-pulse">
+          <div className="flex justify-start animate-pulse">
+            <div className="bg-zinc-800 text-zinc-500 rounded-2xl px-4 py-3 border border-zinc-700">
               Thinking...
             </div>
           </div>
@@ -80,7 +81,7 @@ export const GeminiAssistant: React.FC = () => {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
             placeholder="e.g. Why am I getting 'invalid_grant' when exchanging code?"
-            className="flex-1 bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+            className="flex-1 bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 transition-all text-zinc-100 placeholder-zinc-600"
           />
           <button
             onClick={handleSend}

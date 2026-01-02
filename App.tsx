@@ -1,10 +1,10 @@
 
 import React, { useState } from 'react';
-import { ViewType } from './types';
-import { DiscoveryExplorer } from './components/DiscoveryExplorer';
-import { JWTDebugger } from './components/JWTDebugger';
-import { RequestBuilder } from './components/RequestBuilder';
-import { GeminiAssistant } from './components/GeminiAssistant';
+import { ViewType } from './types.ts';
+import { DiscoveryExplorer } from './components/DiscoveryExplorer.tsx';
+import { JWTDebugger } from './components/JWTDebugger.tsx';
+import { RequestBuilder } from './components/RequestBuilder.tsx';
+import { GeminiAssistant } from './components/GeminiAssistant.tsx';
 
 const App: React.FC = () => {
   const [activeView, setActiveView] = useState<ViewType>('discovery');
@@ -27,9 +27,9 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex flex-col md:flex-row">
+    <div className="min-h-screen bg-zinc-950 flex flex-col md:flex-row text-zinc-100">
       {/* Sidebar Navigation */}
-      <nav className="w-full md:w-64 bg-zinc-900 border-r border-zinc-800 flex flex-col p-6 space-y-8 sticky top-0 h-auto md:h-screen">
+      <nav className="w-full md:w-64 bg-zinc-900 border-r border-zinc-800 flex flex-col p-6 space-y-8 md:sticky md:top-0 h-auto md:h-screen z-10">
         <div>
           <h1 className="text-xl font-bold text-white flex items-center gap-2">
             <span className="bg-blue-600 p-1 rounded text-lg">O</span>
@@ -70,7 +70,7 @@ const App: React.FC = () => {
       </nav>
 
       {/* Main Content Area */}
-      <main className="flex-1 p-6 md:p-10 max-w-7xl mx-auto w-full">
+      <main className="flex-1 p-6 md:p-10 max-w-7xl mx-auto w-full min-h-screen">
         <header className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
             <div className="text-xs text-blue-500 font-bold uppercase tracking-widest mb-1">Environment: Development</div>

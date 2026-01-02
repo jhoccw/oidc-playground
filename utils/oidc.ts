@@ -1,9 +1,9 @@
 
-import { DecodedJWT } from '../types';
+import { DecodedJWT } from '../types.ts';
 
 export const decodeJWT = (token: string): DecodedJWT | null => {
   try {
-    const parts = token.split('.');
+    const parts = token.trim().split('.');
     if (parts.length !== 3) return null;
 
     const decodePart = (str: string) => {
@@ -52,7 +52,7 @@ export const generateRandomString = (length: number = 32): string => {
 };
 
 export const buildAuthorizeUrl = (endpoint: string, params: Record<string, string>): string => {
-  const url = new URL(endpoint);
+  const url = new URL(endpoint.trim());
   Object.entries(params).forEach(([key, value]) => {
     if (value) url.searchParams.append(key, value);
   });
