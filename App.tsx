@@ -4,7 +4,6 @@ import { ViewType } from './types.ts';
 import { DiscoveryExplorer } from './components/DiscoveryExplorer.tsx';
 import { JWTDebugger } from './components/JWTDebugger.tsx';
 import { RequestBuilder } from './components/RequestBuilder.tsx';
-import { GeminiAssistant } from './components/GeminiAssistant.tsx';
 
 const App: React.FC = () => {
   const [activeView, setActiveView] = useState<ViewType>('discovery');
@@ -13,7 +12,6 @@ const App: React.FC = () => {
     { id: 'discovery', label: 'Discovery', icon: '🌐' },
     { id: 'builder', label: 'Auth Builder', icon: '🛠️' },
     { id: 'debugger', label: 'JWT Debugger', icon: '🔍' },
-    { id: 'assistant', label: 'AI Expert', icon: '🤖' },
   ];
 
   const renderView = () => {
@@ -21,7 +19,6 @@ const App: React.FC = () => {
       case 'discovery': return <DiscoveryExplorer />;
       case 'builder': return <RequestBuilder />;
       case 'debugger': return <JWTDebugger />;
-      case 'assistant': return <GeminiAssistant />;
       default: return <DiscoveryExplorer />;
     }
   };

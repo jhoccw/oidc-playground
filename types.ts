@@ -37,7 +37,7 @@ export interface DecodedJWT {
   raw: string;
 }
 
-export type ViewType = 'discovery' | 'builder' | 'debugger' | 'assistant';
+export type ViewType = 'discovery' | 'builder' | 'debugger';
 
 export interface AuthRequestParams {
   issuer: string;
