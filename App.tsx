@@ -30,12 +30,16 @@ const App: React.FC = () => {
     <div className="min-h-screen bg-zinc-950 flex flex-col md:flex-row text-zinc-100">
       {/* Sidebar Navigation */}
       <nav className="w-full md:w-64 bg-zinc-900 border-r border-zinc-800 flex flex-col p-6 space-y-8 md:sticky md:top-0 h-auto md:h-screen z-10">
-        <div>
-          <h1 className="text-xl font-bold text-white flex items-center gap-2">
-            <span className="bg-blue-600 p-1 rounded text-lg">O</span>
-            OIDC Master
-          </h1>
-          <p className="text-xs text-zinc-500 mt-1 uppercase tracking-widest font-bold">Dev Debugging Suite</p>
+        <div className="flex flex-col items-start gap-4">
+          <img 
+            src="https://cdn.prod.website-files.com/60658b46b03f0cf83ac1485d/619e6607eb647619cecee2cf_authgear-logo.svg" 
+            alt="Authgear Logo" 
+            className="h-10 brightness-0 invert"
+          />
+          <div>
+            <h1 className="text-2xl font-bold text-white tracking-tight">OIDC Master</h1>
+            <p className="text-[10px] text-zinc-500 mt-1 uppercase tracking-widest font-bold">Dev Debugging Suite</p>
+          </div>
         </div>
 
         <div className="space-y-2">
