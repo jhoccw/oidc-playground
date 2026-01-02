@@ -1,0 +1,5 @@
+{
+  "name": "OIDC Master Debugger",
+  "description": "A professional-grade OpenID Connect testing and debugging suite for developers, featuring JWT inspection, discovery explorer, and AI-powered troubleshooting.",
+  "requestFramePermissions": []
+}
